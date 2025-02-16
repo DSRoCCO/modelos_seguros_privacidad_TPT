@@ -5,12 +5,19 @@ Este proyecto tiene como objetivo ayudar a la compañía de seguros **Sure Tomor
 ## Tareas
 
 1. **Encontrar clientes similares a un cliente determinado**: Esta tarea ayuda a los agentes de marketing a identificar clientes con características similares para optimizar sus estrategias de marketing.
+![Distribucion de valores atipicos](img/Distribucion_valores_atipicos.png)
    
 2. **Predecir si un nuevo cliente recibirá un beneficio de seguro**: Se comparan los resultados de un modelo entrenado con los de un modelo dummy no entrenado para evaluar su efectividad.
+![Comparacion Dummy](img/comparacion_dummy_logistica.png)
 
 3. **Predecir la cantidad de beneficios de seguro que recibirá un cliente**: Utilizando un modelo de regresión lineal, se predicen los beneficios basados en diversas características del cliente.
+![Desbalance y Balance](img/desbalance_balance.png)
+
+![Compracion de RMSE y R2 para 4 modelos](img/Comparacion_RMSE_%20R2_4_modelos.png)
 
 4. **Proteger los datos personales de los clientes sin afectar el modelo de predicción**: Se desarrolla un algoritmo de enmascaramiento de datos para asegurar que los datos personales de los clientes sean difíciles de recuperar en caso de filtraciones, sin afectar la calidad de los modelos de machine learning.
+
+![Distribucion de insurance benefits](img/distribucion_insurance_benefits.png)
 
 ## Descripción de los Datos
 
@@ -25,45 +32,46 @@ El objetivo es predecir el **número de beneficios de seguro** recibidos por una
 
 ## Resultados de las Tareas
 
-### Tarea 1: Encontrar clientes similares
-Usando distancia euclidiana, se identificaron los clientes más similares al cliente de índice 0. Los resultados muestran distancias pequeñas para los clientes más cercanos, ayudando a los agentes de marketing a orientar mejor sus campañas.
+## CONCLUSIONES
+**Tarea 1:** Búsqueda de clientes similares
+- Utilizamos el algoritmo Nearest Neighbors con la métrica 'cosine', lo que nos permite medir la similitud en función del ángulo entre los vectores de características. Esto es útil para encontrar clientes con perfiles similares.
+- Implementamos un algoritmo que identifica los 5 clientes más similares a un perfil dado en función de esta métrica.
 
-### Tarea 2: Predecir la probabilidad de recibir un beneficio
-- **Modelo Dummy**: Precisión de 0.89
-- **Modelo entrenado** (Regresión Logística): Precisión de 0.99
+**Tarea 2:** Predicción de clientes que recibirán beneficios
+- Aplicamos Regresión Logística para identificar a los clientes con mayor probabilidad de recibir un beneficio.
+- Transformamos la variable objetivo Insurance benefits en una variable binaria, donde todos los valores mayores a 0 se convirtieron en 1.
+- Realizamos escalamiento de datos para optimizar el procesamiento del modelo.
+- Aplicamos técnicas de balanceo de clases, ya que los datos estaban desbalanceados.
+- Comparamos los resultados de la Regresión Logística con un modelo base (dummy) que asigna etiquetas aleatorias con una precisión de 0.5. Nuestro modelo de Regresión - - 
+- Logística alcanzó una precisión del 99%, demostrando su efectividad.
 
-Se comprobó que el modelo entrenado supera ampliamente al modelo dummy, evidenciando que el aprendizaje automático mejora la precisión en la predicción.
+**Tarea 3:** Comparación de modelos para predicción de Salary
+- Escalamos únicamente la variable Salary, ya que presentaba una gran variabilidad en comparación con las demás características.
+- Probamos cuatro modelos de regresión para determinar el más óptimo:
+- Random Forest Regressor resultó ser el modelo con mejor desempeño, obteniendo los siguientes resultados:
+- **Entrenamiento:**
+    - RMSE = 0.01
+    - R² = 1.00
+- **Prueba:**
+    - RMSE = 0.02
+    - R² = 1.00
+- **Validación:**
+    - RMSE = 0.01
+     - R² = 1.00
+- Estos resultados sugieren que el modelo comprende bien las relaciones entre las características y generaliza correctamente. Sin embargo, dado que el max_depth del modelo fue 1, podría existir un riesgo de sobreajuste. No obstante, al comparar los resultados en los conjuntos de prueba y validación, observamos un rendimiento estable, lo que indica que el modelo generaliza adecuadamente.
 
-### Tarea 3: Predecir la cantidad de beneficios de seguro
-- **Modelo de Regresión Lineal**:
-  - MSE: 0.13
-  - R2: 0.44
-- **Modelo Random Forest**:
-  - MSE: 0.06
-  - R2: 0.75
+**Tarea 4:** Ofuscación de datos y evaluación de impacto
+- Aplicamos un método de ofuscación para proteger la información sensible de los clientes:
+- Agrupamos la variable Age en rangos de edad.
+- Introdujimos ruido controlado en la variable Salary.
+- Entrenamos nuevos modelos con los datos enmascarados y utilizamos One-Hot Encoding para procesar las variables categóricas.
+- Evaluamos el impacto de la ofuscación comparando los resultados con los datos originales:
+- **Linear Regression:**
+    - MSE: 0.02
+    - R²: 0.92
+- **Random Forest Regressor:**
+    - MSE: 0.03
+    - R²: 0.88
 
-El modelo Random Forest mostró mejores resultados que la regresión lineal, con un menor MSE y un mayor R2, sugiriendo que es más efectivo para capturar relaciones complejas entre las características.
-
-### Tarea 4: Proteger los datos personales de los clientes
-Se aplicó un método de ofuscación de datos, agrupando por edad y añadiendo ruido controlado al salario, lo que resultó en modelos de regresión lineal y Random Forest entrenados con los datos ofuscados.
-
-- **Modelo de Regresión Lineal (con datos ofuscados)**:
-  - MSE: 0.06
-  - R2: 0.76
-- **Modelo Random Forest (con datos ofuscados)**:
-  - MSE: 0.08
-  - R2: 0.69
-
-Comparando con los resultados de los modelos entrenados con datos normales, se observó que la regresión lineal mejoró ligeramente su precisión, mientras que el Random Forest disminuyó debido a la pérdida de complejidad en las relaciones entre las características.
-
-## Conclusiones
-
-- **Tarea 1**: Se utilizó la distancia euclidiana para identificar clientes similares, con un algoritmo que encontró el top 5 de clientes con características semejantes.
-  
-- **Tarea 2**: La regresión logística mostró un rendimiento superior a un modelo dummy, destacando la efectividad del modelo entrenado para predecir beneficios.
-
-- **Tarea 3**: La regresión lineal no proporcionó buenos resultados, pero el modelo Random Forest superó a la regresión lineal al capturar mejor las relaciones entre las características. La regularización con Ridge no mostró mejoras significativas en este caso.
-
-- **Tarea 4**: El enmascaramiento de datos protegió la información personal sin afectar drásticamente el rendimiento de los modelos, aunque se observó que la regresión lineal se benefició más del enmascaramiento que el Random Forest, probablemente debido a la simplicidad del modelo.
-
-Este proyecto demuestra la capacidad de los modelos de machine learning para predecir beneficios de seguros y cómo se puede proteger la privacidad de los clientes sin comprometer significativamente el rendimiento del modelo.
+- Linear Regression mostró métricas más estables después de la ofuscación, lo que indica que pudo adaptarse mejor a los datos transformados.
+Random Forest Regressor, en cambio, se vio más afectado, ya que este modelo depende de relaciones más complejas, las cuales se redujeron debido a la ofuscación.
